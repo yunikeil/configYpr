@@ -7,7 +7,6 @@ from selenium.webdriver.common.keys import Keys
 
 driver = webdriver.Chrome('chromedriver.exe')
 driver.get("https://dreampuf.github.io/GraphvizOnline/#digraph%20G%20%7B%0A%20%20%20%20%0A%7D")
-sleep(0.5)
 graph_keys = driver.find_element_by_xpath('/html/body/pre/textarea')
 
 
