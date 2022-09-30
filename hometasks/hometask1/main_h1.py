@@ -1,27 +1,47 @@
 import sys
+import os
 import time
 import zipfile
 
-
-def main():
-    print(len(sys.argv))
-
-    if len(sys.argv) == 2:
-        pass
-    else:
-        print("Invalid file system!")
+#
+#
+#
 
 
-    # file_system = sys.argv[1]
+if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
+    path_file_system = sys.argv[1]
+else:
+    print("Invalid file system!")
+    sys.exit(1)
 
-    '''start_message = "Loading...\n\nWelcome to Hometask 01\n"
-    pre_name = "[root@localhost ~]# "
-    command = ""
-    
-    print(start_message)
-    time.sleep(1)
-    i = input(pre_name)
-    '''
+system = sys.platform
+start_message = "Loading...\n\nWelcome to Hometask 01\n"
+pre_name = "[root@localhost ~]# "
+commands = ["pwd", "ls", "cd", "cat", "exit", "clear", "help"]
+# command = ""
 
+print(start_message)
+current_path = r'root'
 
-main()
+file_system = zipfile.ZipFile(path_file_system, 'r')
+files = file_system.namelist()  # Список всех директорий
+
+while 123:
+    command = input(pre_name)
+    match command:
+        case "exit":
+            sys.exit(1)
+        case "cls":
+            if system == "win32":
+                os.system('cls')
+            elif system == "linux":
+                os.system('clear')
+        case "help":
+            print(commands)
+            print("12345")
+        case "restart":
+            os.system(rf"cd {os.getcwd()}")
+            os.system(rf"py main_h1.py {path_file_system}")
+            sys.exit(1)
+        case _:
+            print(f"sh: {command}: command not found", command)
