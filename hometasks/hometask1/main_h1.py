@@ -3,10 +3,13 @@ import os
 import time
 import zipfile
 
+# import keyboard
+
 #
 #
 #
 
+# eyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
 
 if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
     path_file_system = sys.argv[1]
@@ -21,10 +24,15 @@ commands = ["pwd", "ls", "cd", "cat", "exit", "clear", "help"]
 # command = ""
 
 print(start_message)
-current_path = r'root'
+current_path = ['root']
 
-file_system = zipfile.ZipFile(path_file_system, 'r')
+file_system = zipfile.ZipFile(path_file_system, 'a')
 files = file_system.namelist()  # Список всех директорий
+
+
+def change_dir(pre_dir, pos_dir):
+    pass
+
 
 while 123:
     command = input(pre_name)
@@ -38,10 +46,19 @@ while 123:
                 os.system('clear')
         case "help":
             print(commands)
-            print("12345")
         case "restart":
+            os.system("cls")
             os.system(rf"cd {os.getcwd()}")
             os.system(rf"py main_h1.py {path_file_system}")
             sys.exit(1)
+        case "pwd":
+            print(current_path)
+        case "ls" :
+            for dir in files:
+                if '.' in dir:
+                    # print(files) # print(dir.rpartition('/')[len(dir.rpartition('/')) - 1])
+                    dir = dir.split('/')
+                    print(dir.index('file2.txt'))
+                    print(dir)
         case _:
             print(f"sh: {command}: command not found", command)

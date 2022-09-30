@@ -1,5 +1,7 @@
-import signal
+import keyboard
 
-valid_signals = signal.valid_signals()
+def print_pressed_keys(e):
+    print(e, e.event_type, e.name)
 
-print(valid_signals)
+keyboard.hook(print_pressed_keys)
+keyboard.wait()
