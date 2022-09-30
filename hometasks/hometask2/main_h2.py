@@ -27,14 +27,11 @@ def get_dependencies(package_name, level):
         passed.append(package_name)
         for r in packages:
             # Проверка на каком уровне и сколько зависимостей
-            if level >= 1 or iteration >= 8:
-                break
+            if level >= 2 or iteration >= 8: break
             iteration += 1
             # Обрезаем версии библиотек и другие каракули
             del_char = [' ', '[', '<', '>', '=', ';', '~', '!']
-            for repl in del_char:
-                r = r.partition('{0}'.format(repl))[0]
-
+            for repl in del_char: r = r.partition('{0}'.format(repl))[0]
             graph_keys.send_keys('"{0}" -> "{1}"\n'.format(package_name, r))
             get_dependencies(r, level)
         print(package_name, " finished;")
