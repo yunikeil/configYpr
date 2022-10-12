@@ -5,8 +5,6 @@ import zipfile
 import random
 
 
-def slow_lettering(string)
-
 # import keyboard
 
 #
@@ -14,6 +12,11 @@ def slow_lettering(string)
 #
 
 # eyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
+
+
+def change_dir(pre_dir, pos_dir):
+    pass
+
 
 if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
     path_file_system = sys.argv[1]
@@ -33,46 +36,40 @@ current_path = ['root']
 file_system = zipfile.ZipFile(path_file_system, 'a')
 files = file_system.namelist()  # Список всех директорий
 
-
-def slow_lettering(string):
-    rand = random.randint(0,50)
-    for letter in string:
-        print(letter)
-        time.sleep(rand/100)
-
-
-def change_dir(pre_dir, pos_dir):
-    pass
-
-
 while 123:
-    command = input(pre_name)
-    match command:
-        case "test":
-            i = str(input())
-            slow_lettering(i)
-        case "exit":
-            sys.exit(1)
-        case "cls":
-            if system == "win32":
-                os.system('cls')
-            elif system == "linux":
-                os.system('clear')
-        case "help":
-            print(commands)
-        case "restart":
-            os.system("cls")
-            os.system(rf"cd {os.getcwd()}")
-            os.system(rf"py main_h1.py {path_file_system}")
-            sys.exit(1)
-        case "pwd":
-            print(current_path)
-        case "ls" :
-            for dir in files:
-                if '.' in dir:
-                    # print(files) # print(dir.rpartition('/')[len(dir.rpartition('/')) - 1])
-                    dir = dir.split('/')
-                    print(dir.index('file2.txt'))
-                    print(dir)
-        case _:
-            print(f"sh: {command}: command not found", command)
+    command = str(input(pre_name))
+    if command == "test":
+        print("test started")
+        print(files)
+    elif command == "help":
+        print(commands)
+    elif command == "cls":
+        if system == "win32":
+            os.system('cls')
+        elif system == "linux":
+            os.system('clear')
+    elif command == "exit":
+        sys.exit(1)
+    elif command == "restart":
+        os.system("cls")
+        os.system(rf"cd {os.getcwd()}")
+        os.system(rf"py main_h1.py {path_file_system}")
+        sys.exit(1)
+    # Нужно будет дописать pwd
+    elif command == "pwd":
+        for folder in current_path: print('/' + folder, end='')
+        print()
+    # Создание новой папки
+    elif command == "mkdir":
+        pass
+    elif command == "ls":
+        for _dir in files:
+            if _dir.count('/') == 1 or (_dir.count('/') == 2 and _dir.count('.') == 0):
+                print(_dir.split('/')[1], end=' ')
+        print()
+    elif "cd" in command:
+        command = command.split(' ')
+        print(command)
+        pass
+    else:
+        print(f"sh: {command}: command not found", command)
