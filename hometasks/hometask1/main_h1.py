@@ -2,6 +2,10 @@ import sys
 import os
 import time
 import zipfile
+import random
+
+
+def slow_lettering(string)
 
 # import keyboard
 
@@ -30,6 +34,13 @@ file_system = zipfile.ZipFile(path_file_system, 'a')
 files = file_system.namelist()  # Список всех директорий
 
 
+def slow_lettering(string):
+    rand = random.randint(0,50)
+    for letter in string:
+        print(letter)
+        time.sleep(rand/100)
+
+
 def change_dir(pre_dir, pos_dir):
     pass
 
@@ -37,6 +48,9 @@ def change_dir(pre_dir, pos_dir):
 while 123:
     command = input(pre_name)
     match command:
+        case "test":
+            i = str(input())
+            slow_lettering(i)
         case "exit":
             sys.exit(1)
         case "cls":
