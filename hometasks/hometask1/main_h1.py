@@ -49,7 +49,7 @@ while 123:
         elif system == "linux":
             os.system('clear')
     elif command == "exit":
-        sys.exit(1)
+        sys.exit(1)#
     elif command == "restart":
         os.system("cls")
         os.system(rf"cd {os.getcwd()}")
