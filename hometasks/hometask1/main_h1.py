@@ -10,6 +10,7 @@ import random
 
 #
 # /mnt/c/Users/iyuna/source/repos
+# /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
 #
 
 # keyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
@@ -47,7 +48,7 @@ while 123:
         print(files)
     elif command == "help":
         print(commands)
-    elif command == "cls":
+    elif command == "cls" or "clear":
         if system == "win32":
             os.system('cls')
         elif system == "linux":
@@ -55,10 +56,16 @@ while 123:
     elif command == "exit":
         sys.exit(1)
     elif command == "restart":
-        os.system("cls")
-        os.system(rf"cd {os.getcwd()}")
-        os.system(rf"py main_h1.py {path_file_system}")
-        sys.exit(1)
+        if system == "win32":
+            os.system("cls")
+            os.system(rf"cd {os.getcwd()}")
+            os.system(rf"py main_h1.py {path_file_system}")
+            sys.exit(1)
+        elif system == "linux":
+            os.system("clear")
+            os.system(rf"cd {os.getcwd()}")
+            os.system(rf"python3 main_h1.py {path_file_system}")
+            sys.exit(1)
     # Нужно будет дописать pwd
     elif command == "pwd":
         for folder in current_path: print('/' + folder, end='')
