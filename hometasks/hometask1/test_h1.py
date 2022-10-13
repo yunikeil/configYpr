@@ -11,4 +11,12 @@ keyboard.wait()'''
 print(len(sys.argv))
 sys.exit(1)
 '''
+def func1(text):
+    print(text)
 
+def func2():
+    return ""
+
+functions = {'func1':func1, 'func2':func2}
+
+functions['func1']("hi")
