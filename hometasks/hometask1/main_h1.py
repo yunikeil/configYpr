@@ -40,47 +40,90 @@ current_path = ['root']
 
 file_system = zipfile.ZipFile(path_file_system, 'a')
 files = file_system.namelist()  # Список всех директорий
+if system == "win32":
+    while 123:
+        command = str(input(pre_name))
+        if command == "test":
+            print("test started")
+            print("test finished")
 
-while 123:
-    command = str(input(pre_name))
-    if command == "test":
-        print("test started")
-        print(files)
-    elif command == "help":
-        print(commands)
-    elif command == "cls" or "clear":
-        if system == "win32":
+        elif command == "help":
+            print(commands)
+
+        elif command == "cls" or "clear":
             os.system('cls')
-        elif system == "linux":
-            os.system('clear')
-    elif command == "exit":
-        sys.exit(1)
-    elif command == "restart":
-        if system == "win32":
+
+        elif command == "exit":
+            sys.exit(1)
+
+        elif command == "restart":
             os.system("cls")
             os.system(rf"cd {os.getcwd()}")
             os.system(rf"py main_h1.py {path_file_system}")
             sys.exit(1)
-        elif system == "linux":
+        elif command == "pwd":
+            for folder in current_path: print('/' + folder, end='')
+            print()
+
+        # Создание новой папки
+        elif command == "mkdir":
+            pass
+
+        elif command == "ls":
+            for _dir in files:
+                if _dir.count('/') == 1 or (_dir.count('/') == 2 and _dir.count('.') == 0):
+                    print(_dir.split('/')[1], end=' ')
+            print()
+
+        elif "cd" in command:
+            command = command.split(' ')
+            print(command)
+            pass
+
+        else:
+            print(f"sh: {command}: command not found", command)
+
+
+elif system == "linux":
+    while 123:
+        command = str(input(pre_name))
+        if command == "test":
+            print("test started")
+            print("test finished")
+
+        elif command == "help":
+            print(commands)
+
+        elif command == "cls" or "clear":
+            os.system('clear')
+
+        elif command == "exit":
+            sys.exit(1)
+
+        elif command == "restart":
             os.system("clear")
             os.system(rf"cd {os.getcwd()}")
             os.system(rf"python3 main_h1.py {path_file_system}")
             sys.exit(1)
-    # Нужно будет дописать pwd
-    elif command == "pwd":
-        for folder in current_path: print('/' + folder, end='')
-        print()
-    # Создание новой папки
-    elif command == "mkdir":
-        pass
-    elif command == "ls":
-        for _dir in files:
-            if _dir.count('/') == 1 or (_dir.count('/') == 2 and _dir.count('.') == 0):
-                print(_dir.split('/')[1], end=' ')
-        print()
-    elif "cd" in command:
-        command = command.split(' ')
-        print(command)
-        pass
-    else:
-        print(f"sh: {command}: command not found", command)
+
+        elif command == "pwd":
+            for folder in current_path: print('/' + folder, end='')
+            print()
+
+        # Создание новой папки
+        elif command == "mkdir":
+            pass
+
+        elif command == "ls":
+            for _dir in files:
+                if _dir.count('/') == 1 or (_dir.count('/') == 2 and _dir.count('.') == 0):
+                    print(_dir.split('/')[1], end=' ')
+            print()
+
+        elif "cd" in command:
+            command = command.split(' ')
+            print(command)
+            pass
+
+        else:
+            print(f"sh: {command}: command not found", command)
