@@ -57,7 +57,7 @@ class Vshell():
                     self.pwd()
             else:
                 i = len(self.current_folder) - 1
-                while (self.current_folder[i - 1] != "/"):
+                while self.current_folder[i - 1] != "/":
                     i -= 1
                 self.current_folder = self.current_folder[:i]
                 if folder[0] == "-":
