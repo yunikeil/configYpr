@@ -5,16 +5,16 @@ import zipfile
 
 
 class Commands(object):
-    def pwd(self, command):
+    def pwd(self, string):
         pass
 
-    def ls(self, command):
+    def ls(self, string):
         pass
 
-    def cd(self, command):
+    def cd(self, string):
         pass
 
-    def cat(self, command):
+    def cat(self, string):
         pass
     pass
 
@@ -22,7 +22,8 @@ class Commands(object):
 class VShell(Commands):
     @staticmethod
     def startExpectationCommand():
-        command = str(input(pre_name))
+        cmd_input = str(input(pre_name))
+        return cmd_input, len(cmd_input.split(' '))
     pass
 
 
@@ -39,6 +40,11 @@ pre_name = f"[yunik@{socket.gethostname()} ~]# "
 
 print(start_message)
 current_path = ['root']
+
+
+while 123:
+    command, command_len = shell.startExpectationCommand()
+    print(f"command: {command}\ncommand len: {command_len}")
 
 
 
