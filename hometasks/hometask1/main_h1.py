@@ -11,18 +11,24 @@ import random
 #
 #
 
-# eyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
+# keyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
 
 
 def change_dir(pre_dir, pos_dir):
     pass
 
 
-if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
+# Первый иф ломается проверка zip файла время от времени
+"""if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
+# if len(sys.argv) == 2 and ".zip" in sys.argv[1]:
     path_file_system = sys.argv[1]
 else:
+    print(sys.argv)
     print("Invalid file system!")
-    sys.exit(1)
+    sys.exit(1)"""
+
+print(sys.argv)
+sys.exit(1)
 
 system = sys.platform
 start_message = "Loading...\n\nWelcome to Hometask 01\n"
