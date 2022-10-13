@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import socket
 import zipfile
 import random
 
@@ -8,7 +9,7 @@ import random
 # import keyboard
 
 #
-#
+# /mnt/c/Users/iyuna/source/repos
 #
 
 # keyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
@@ -19,20 +20,17 @@ def change_dir(pre_dir, pos_dir):
 
 
 # Первый иф ломается проверка zip файла время от времени
-"""if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
-# if len(sys.argv) == 2 and ".zip" in sys.argv[1]:
+if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
+#if len(sys.argv) == 2 and ".zip" in sys.argv[1]:
     path_file_system = sys.argv[1]
 else:
-    print(sys.argv)
+    # print(sys.argv)
     print("Invalid file system!")
-    sys.exit(1)"""
-
-print(sys.argv)
-sys.exit(1)
+    sys.exit(1)
 
 system = sys.platform
 start_message = "Loading...\n\nWelcome to Hometask 01\n"
-pre_name = "[root@localhost ~]# "
+pre_name = f"[yunik@{socket.gethostname()} ~]# "
 commands = ["pwd", "ls", "cd", "cat", "exit", "clear", "help"]
 # command = ""
 
