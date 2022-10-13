@@ -20,8 +20,8 @@ class Vshell():
     # Чтение файла и  вывод его содержимого на экран
     def cat(self, file_to_open):
         for file in file_system_image.infolist():
-            if self.current_folder[1:] + file_to_open in file.filename or file_to_open[0] == "/" and file_to_open[
-                                                                                                     1:] in file.filename or self.current_folder == "/" and file_to_open == file.filename:
+            if self.current_folder[1:] + file_to_open in file.filename or file_to_open[0] == "/" and file_to_open[1:] in\
+                    file.filename or self.current_folder == "/" and file_to_open == file.filename:
                 byte_text = file_system_image.read(file)
                 print(byte_text.decode('utf-8'))
                 break
@@ -41,8 +41,8 @@ class Vshell():
                 if self.current_folder[1:] in name and self.current_folder[1:] != name:
                     if "/" not in name[len(self.current_folder) - 1:]:
                         print(name[len(self.current_folder) - 1:])
-                    elif "." not in name[len(self.current_folder) - 1:] and "/" not in name[
-                                                                                       len(self.current_folder) - 1:-1]:
+                    elif "." not in name[len(self.current_folder) - 1:] and "/" not in\
+                            name[len(self.current_folder) - 1:-1]:
                         print(name[len(self.current_folder) - 1:-1])
 
     # Изменение рабочей директории

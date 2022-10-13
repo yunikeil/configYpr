@@ -2,6 +2,7 @@ import os
 import sys
 import socket
 import zipfile
+# /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
 
 
 class Commands(object):
@@ -22,6 +23,7 @@ class Commands(object):
 class VShell(Commands):
     @staticmethod
     def startExpectationCommand():
+        pass
         cmd_input = str(input(pre_name))
         return cmd_input, len(cmd_input.split(' '))
     pass
@@ -45,6 +47,7 @@ current_path = ['root']
 while 123:
     command, command_len = shell.startExpectationCommand()
     print(f"command: {command}\ncommand len: {command_len}")
+
 
 
 
