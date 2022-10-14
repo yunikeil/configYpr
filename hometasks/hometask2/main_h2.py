@@ -33,7 +33,7 @@ def get_dependencies(package_name, level, per_a, per_b):
             del_char = [' ', '[', '<', '>', '=', ';', '~', '!']
             for repl in del_char: r = r.partition('{0}'.format(repl))[0]
             graph_keys.send_keys('"{0}" -> "{1}"\n'.format(package_name, r))
-            get_dependencies(r, level)
+            get_dependencies(r, level, per_a, per_b)
         print(package_name, " finished;")
 
 
