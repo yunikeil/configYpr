@@ -2,7 +2,7 @@ import requests
 import warnings
 from selenium import webdriver
 
-
+# pip freeze --local > requirements.txt
 # pip freeze > requirements.txt
 
 driver = webdriver.Chrome('chromedriver.exe')
