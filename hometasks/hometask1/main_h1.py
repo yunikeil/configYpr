@@ -31,17 +31,8 @@ class Functional(object):
 
 
 class Commands(object):
-    """
-    self.commands = [["pwd", self.pwd], ["ls", self.ls], ["cd", self.cd], ["cat", self.cat], ["s", self.s]]
-    # commands[0][1]("123")
-    # Можно также списком ->
-    # commands = {'pwd':pwd, 'ls':ls, 'cd':cd, 'cat':cat}
-    """
-
     def __init__(self):
         self.commands = Functional.create_methods_list(Commands)
-        # print("init of Commands:\n", self.commands)
-        pass
 
     @staticmethod
     def pwd(string, VShell_):
@@ -50,15 +41,18 @@ class Commands(object):
     @staticmethod
     def ls(string, VShell_):
         if len(string.split(' ')) == 1:
+            z_ = False
             passed = []
             current_folder_ = VShell_.current_path[len(VShell_.current_path)-1]
             for file_ in VShell_.files:
                 directory_ = file_.split('/')
                 for value_, folder_ in enumerate(directory_):
                     if folder_ == current_folder_ and directory_[value_+1] not in passed:
-                        passed.append(directory_[value_+1])
-                        print(directory_[value_+1], end=' ')
-            print()
+                        if directory_[value_+1]: z_ = True
+                        if z_:
+                            passed.append(directory_[value_+1])
+                            print(directory_[value_+1], end=' ')
+            if z_: print()
 
     @staticmethod
     def cd(string, VShell_):
@@ -67,19 +61,13 @@ class Commands(object):
             VShell_.current_path.pop(len(VShell_.current_path)-1)
         # идём на указанную директорию
         elif len(string.split(' ')) == 2:
-            #print("current path:", '/'.join(VShell_.current_path))
             for directories_ in VShell_.files:
                 directories_ = directories_[:-1]
                 if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
-                    #print("vshell updated")
-                    #print("directories_.split('/'):", directories_.split('/'))
                     VShell_.current_path = directories_.split('/')
-                #print("direcrories_: "+directories_)
-                #print("cd command: "+ '/'.join(VShell_.current_path) + '/' + string.split(' ')[1])
-                return 0
-            print("\033[32mcan't cd to " + str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
-                  ": No such file or directory\033[0m")
-        pass
+                    return 0
+            print("can't cd to " + str('/'+'/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
+                  ": No such file or directory")
 
     @staticmethod
     def cat(string, VShell_):
@@ -88,7 +76,6 @@ class Commands(object):
             name_file = string.split(' ')[1]
             files_obj = VShell_.file_system.infolist()
             for file_ in files_obj:
-                #print(f"file_: {file_}\nname str: {current_path_str_without_first_slash}/{name_file}")
                 if current_path_str_without_first_slash + '/' + name_file in str(file_):
                     print('> ', end='')
                     for symbol_ in VShell_.file_system.read(file_).decode('utf-8'):
@@ -103,16 +90,9 @@ class Commands(object):
         for SpecCommand_ in VShell_.special_commands:
             if SpecCommand_[0] in string:
                 SpecCommand_[1](string, VShell_)
-        pass
 
 
 class SpecialCommands(object):
-    """
-    # __init__
-    self.special_commands = [["test0", self.test0], ["test1", self.test1], ["restart", self.restart],
-                             ["exit", self.exit]]
-    """
-
     def __init__(self):
         self.special_commands = Functional.create_methods_list(SpecialCommands)
         # print("init of SpecialCommands:\n", self.special_commands)
@@ -125,9 +105,6 @@ class SpecialCommands(object):
     @staticmethod
     def test1(string, VShell_):
         print(f"test1\nstring: {string}\nVShell_obj: {VShell_}")
-        # print(VShell_.special_commands)
-        # VShell_.special_commands__[2](string, VShell_)
-        # print(f"test1\nstring: {string}\nVShell_obj: {VShell_}")
 
     @staticmethod
     def exit(string, VShell_):
@@ -136,8 +113,9 @@ class SpecialCommands(object):
     @staticmethod
     def restart(string, VShell_):  # нужно получать путь из дочернего объекта, а не из основной программы
         if VShell_.system == "win32":
-            i_ = str(input("Убедитесь, что запускаете через cmd, powershell не поддерживает данную команду."
-                           "\nY-продолжить выполнение, n-пропустить выполнение\n> "))
+            i_ = str(input("Убедитесь, что запускаете через cmd, "
+                           "powershell не поддерживает данную команду.\n\033[33mY\033[0m-продолжить "
+                           "выполнение\n\033[33mn\033[0m-пропустить выполнение\n> "))
             if i_ == 'Y':
                 os.system("cls")
             else:
@@ -146,7 +124,7 @@ class SpecialCommands(object):
             os.system("clear")
         os.system(rf"cd {os.getcwd()}")
         if VShell_.system == "win32":
-            print(rf"python test_main_h1.py {VShell_.path_file_system}")
+            os.system(rf"py test_main_h1.py {VShell_.path_file_system}")
         else:
             os.system(rf"python3 test_main_h1.py {VShell_.path_file_system}")
         sys.exit(1)
@@ -187,9 +165,10 @@ class VShell(Commands, SpecialCommands):
 
 shell = VShell()
 shell.start()
+
+
 while 123:
     commandIN, command_len = shell.startExpectationCommand()
-    #print(f"commandIN: {commandIN}\ncommand_len: {command_len}")
     if commandIN:
         i = False
         for command in shell.commands:
