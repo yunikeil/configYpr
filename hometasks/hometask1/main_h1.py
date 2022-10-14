@@ -55,7 +55,7 @@ class Commands(object):
             if z_: print()
 
     @staticmethod
-    def cd(string, VShell_):
+    def cd_(string, VShell_):
         # отдаляемся на шаг назад
         if len(string.split(' ')) == 1 and len(VShell_.current_path) != 1:
             VShell_.current_path.pop(len(VShell_.current_path) - 1)
