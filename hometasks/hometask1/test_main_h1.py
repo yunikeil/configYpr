@@ -3,10 +3,13 @@ import sys
 import socket
 import zipfile
 
-
-# os.getlogin()
 # /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
 # test_main_h1.py file_system.zip
+
+
+login = "yunik"  # os.getlogin()
+hostname = socket.gethostname
+start_message = "Loading...\n\nWelcome to Hometask 01\n"
 
 
 class Functional(object):
@@ -36,28 +39,50 @@ class Commands(object):
 
     def __init__(self):
         self.commands = Functional.create_methods_list(Commands)
-        print("init of Commands:\n", self.commands)
+        # print("init of Commands:\n", self.commands)
         pass
 
     @staticmethod
     def pwd(string, VShell_):
-        print(f"pwd command: {string}")
-        pass
+        if len(string.split(' ')) == 1: print('/' + '/'.join(VShell_.current_path))
 
     @staticmethod
     def ls(string, VShell_):
-        print(f"ls command: {string}")
-        pass
+        if len(string.split(' ')) == 1:
+            passed = []
+            current_folder_ = VShell_.current_path[len(VShell_.current_path)-1]
+            for file_ in VShell_.files:
+                directory_ = file_.split('/')
+                for value_, folder_ in enumerate(directory_):
+                    if folder_ == current_folder_ and directory_[value_+1] not in passed:
+                        passed.append(directory_[value_+1])
+                        print(directory_[value_+1], end=' ')
+            print()
 
     @staticmethod
     def cd(string, VShell_):
-        print(f"cd command: {string}")
+        # отдаляемся на шаг назад
+        if len(string.split(' ')) == 1:
+            pass
+        # идём на указанную директорию
+        elif len(string.split(' ')) == 2:
+            pass
         pass
 
     @staticmethod
     def cat(string, VShell_):
-        print(f"cat command: {string}")
-        pass
+        if len(string.split(' ')) == 2:
+            current_path_str_without_first_slash ='/'.join(VShell_.current_path)
+            name_file = string.split(' ')[1]
+            files_obj = VShell_.file_system.infolist()
+            for file_ in files_obj:
+                #print(f"file_: {file_}\nname str: {current_path_str_without_first_slash}/{name_file}")
+                if current_path_str_without_first_slash + '/' + name_file in str(file_):
+                    print('> ', end='')
+                    for symbol_ in VShell_.file_system.read(file_).decode('utf-8'):
+                        if symbol_ != '\n': print(symbol_, end='')
+                        else: print('\n> ', end='')
+        print()
 
     @staticmethod
     def s(string, VShell_):  # вызывать отсюда специальные функции
@@ -76,7 +101,7 @@ class SpecialCommands(object):
 
     def __init__(self):
         self.special_commands = Functional.create_methods_list(SpecialCommands)
-        print("init of SpecialCommands:\n", self.special_commands)
+        # print("init of SpecialCommands:\n", self.special_commands)
 
     # Функции для отладки, извне задания
     @staticmethod
@@ -85,7 +110,8 @@ class SpecialCommands(object):
 
     @staticmethod
     def test1(string, VShell_):
-        print(VShell_.special_commands)
+        print(f"test1\nstring: {string}\nVShell_obj: {VShell_}")
+        # print(VShell_.special_commands)
         # VShell_.special_commands__[2](string, VShell_)
         # print(f"test1\nstring: {string}\nVShell_obj: {VShell_}")
 
@@ -119,32 +145,34 @@ class VShell(Commands, SpecialCommands):
         SpecialCommands.__init__(self)
         self.system = sys.platform
         self.path_file_system = None
+        self.file_system = None
+        self.files = None
         self.current_path = ['root']
+        self.pre_name_root = f"[{login}@{hostname()} ~]#"
+        self.other_pre_name = f"[{login}@{hostname()} ~]: /{'/'.join(self.current_path)}"
 
     def start(self):
         if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
             self.path_file_system = sys.argv[1]
+            self.file_system = zipfile.ZipFile(self.path_file_system, 'a')
+            self.files = self.file_system.namelist()
+            print(start_message)
         else:
             print("Invalid file system!")
             sys.exit(1)
 
-    @staticmethod
-    def startExpectationCommand():
-        cmd_input = str(input(pre_name))
+    def startExpectationCommand(self):
+        if len(self.current_path) == 1: cmd_input = str(input(self.pre_name_root))
+        else: cmd_input = str(input(self.other_pre_name))
         return cmd_input, len(cmd_input.split(' '))
 
 
 shell = VShell()
 shell.start()
 
-start_message = "Loading...\n\nWelcome to Hometask 01\n"
-pre_name = f"[yunik@{socket.gethostname()} ~]# "
-
-print(start_message)
-
 while 123:
     commandIN, command_len = shell.startExpectationCommand()
-    print(f"commandIN: {commandIN}\ncommand_len: {command_len}")
+    #print(f"commandIN: {commandIN}\ncommand_len: {command_len}")
     if commandIN:
         i = False
         for command in shell.commands:
