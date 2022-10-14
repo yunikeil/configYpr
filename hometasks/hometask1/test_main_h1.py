@@ -2,6 +2,7 @@ import os
 import sys
 import socket
 import zipfile
+from zipfile import Path
 
 
 # /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
@@ -67,19 +68,26 @@ class Commands(object):
             VShell_.current_path.pop(len(VShell_.current_path)-1)
         # идём на указанную директорию
         elif len(string.split(' ')) == 2:
-            print("current path:", '/'.join(VShell_.current_path))
-            for directories_ in VShell_.files:
-                directories_ = directories_[:-1]
-                if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
-                    print("vshell updated")
-                    print("directories_.split('/'):", directories_.split('/'))
-                    VShell_.current_path = directories_.split('/')
-                    return 0
-                print("direcrories_: "+directories_)
-                print("cd command: "+ '/'.join(VShell_.current_path) + '/' + string.split(' ')[1])
-            print("\033[32mcan't cd to " + str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
-                  ": No such file or directory\033[0m")
-        pass
+            if string.split(' ')[1].split('/')[0] == "root" and string.split(' ')[1].split('/')[1] == '':
+                VShell_.current_path = ['root']
+            elif string.split(' ')[1].split('/')[0] == "root":
+                for directories_ in VShell_.files:
+                    if directories_[len(directories_) - 1] == '/': directories_ = directories_[:-1]
+                    print(directories_)
+                    if str(string.split(' ')[1]) == str(directories_):
+                        VShell_.current_path = directories_.split('/')
+                        return 0
+                print("can't cd to " + string.split(' ')[1] + ": No such file or directory")
+            else:
+                for directories_ in VShell_.files:
+                    if directories_[len(directories_)-1] == '/': directories_ = directories_[:-1]
+                    if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
+                        print(directories_)
+                        VShell_.current_path = directories_.split('/')
+                        return 0
+                print("can't cd to " + str('/' + '/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
+                      ": No such file or directory")
+
 
     @staticmethod
     def cat(string, VShell_):

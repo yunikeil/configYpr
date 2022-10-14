@@ -58,17 +58,28 @@ class Commands(object):
     def cd(string, VShell_):
         # отдаляемся на шаг назад
         if len(string.split(' ')) == 1 and len(VShell_.current_path) != 1:
-            VShell_.current_path.pop(len(VShell_.current_path)-1)
+            VShell_.current_path.pop(len(VShell_.current_path) - 1)
         # идём на указанную директорию
         elif len(string.split(' ')) == 2:
-            for directories_ in VShell_.files:
-                directories_ = directories_[:-1]
-                if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
-                    VShell_.current_path = directories_.split('/')
-                    return 0
-            print("can't cd to " + str('/'+'/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
-                  ": No such file or directory")
+            if string.split(' ')[1].split('/')[0] == "root" and string.split(' ')[1].split('/')[1] == '':
+                VShell_.current_path = ['root']
+            elif string.split(' ')[1].split('/')[0] == "root":
+                for directories_ in VShell_.files:
+                    if directories_[len(directories_) - 1] == '/': directories_ = directories_[:-1]
+                    if str(string.split(' ')[1]) == str(directories_):
+                        VShell_.current_path = directories_.split('/')
+                        return 0
+                print("can't cd to " + string.split(' ')[1] + ": No such file or directory")
+            else:
+                for directories_ in VShell_.files:
+                    if directories_[len(directories_) - 1] == '/': directories_ = directories_[:-1]
+                    if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
+                        VShell_.current_path = directories_.split('/')
+                        return 0
+                print("can't cd to " + str('/' + '/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
+                      ": No such file or directory")
 
+    #Изменить условие кета, в тестовой версии поменял.
     @staticmethod
     def cat(string, VShell_):
         if len(string.split(' ')) == 2:
