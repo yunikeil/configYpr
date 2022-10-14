@@ -18,47 +18,48 @@ class Commands(object):
         pass
 
     @staticmethod
-    def pwd(string):
+    def pwd(string, VShell_):
         print(f"pwd command: {string}")
         pass
 
     @staticmethod
-    def ls(string):
+    def ls(string, VShell_):
         print(f"ls command: {string}")
         pass
 
     @staticmethod
-    def cd(string):
+    def cd(string, VShell_):
         print(f"cd command: {string}")
         pass
 
     @staticmethod
-    def cat(string):
+    def cat(string, VShell_):
         print(f"cat command: {string}")
         pass
 
     @staticmethod
-    def s(): # вызывать отсюда специальные функции, с утра мб передумаю но вообще возможно можно так
-        print()
+    def s(string, VShell_):  # вызывать отсюда специальные функции
+        for command_ in VShell_.special_commands:
+            if command_[0] in string:
+
         pass
 
+    class SpecialCommands(object):
+        def __init__(self):
+            self.special_commands = [["test", self.test], ["test1", self.test1]]
 
-class SpecialCommands(object):
-    def __init__(self):
-        self.special_commands = [["test", self.test], ["test1", self.test1]]
+        # Функции для отладки, извне задания
+        @staticmethod
+        def test(string, VShell_):
+            sys.exit(1)
 
-    # Функции для отладки, извне задания
-    @staticmethod
-    def test(string):
-        sys.exit(1)
-
-    @staticmethod
-    def test1(string, path_file_system): # нужно получать путь из дочернего объекта, а не из основной программы
-        os.system(rf"cd {os.getcwd()}")
-        os.system(rf"python3 test_main_h1.py {path_file_system}")
+        @staticmethod
+        def test1(string, VShell_):  # нужно получать путь из дочернего объекта, а не из основной программы
+            os.system(rf"cd {os.getcwd()}")
+            os.system(rf"python3 test_main_h1.py {VShell_.path_file_system}")
 
 
-class VShell(Commands, SpecialCommands):
+class VShell(Commands):
 
     def __init__(self):
         super().__init__()
@@ -95,4 +96,3 @@ while 123:
         if command[0] in commandIN:
             i = True
             command[1](commandIN)
-
