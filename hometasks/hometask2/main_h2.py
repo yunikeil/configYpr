@@ -17,7 +17,7 @@ passed = []
 
 # level - на какое количество уровней вниз будет спускаться программа (x)
 # iteration - какое количество зависимостей одной библиотеки будет выведено (x-1)
-def get_dependencies(package_name, level):
+def get_dependencies(package_name, level, per_a, per_b):
     iteration = 0
     level += 1
     # Основа программы, достаёт json из pypi
@@ -27,7 +27,7 @@ def get_dependencies(package_name, level):
         passed.append(package_name)
         for r in packages:
             # Проверка на каком уровне и сколько зависимостей
-            if level >= 2 or iteration >= 8: break
+            if level >= per_a or iteration >= per_b: break
             iteration += 1
             # Обрезаем версии библиотек и другие каракули
             del_char = [' ', '[', '<', '>', '=', ';', '~', '!']
@@ -37,7 +37,8 @@ def get_dependencies(package_name, level):
         print(package_name, " finished;")
 
 
-get_dependencies("pandas", 0 - 1)
+# Проверка на каком уровне(per_a) и сколько зависимостей(per_b)
+get_dependencies("pandas", 0 - 1, 2, 8)
 i = input("Для продолжение нажмите любую клавишу...\n")
 driver.quit()
 # result = "digraph dependencies {\n" + get_dependencies("pandas") + "\n}"
