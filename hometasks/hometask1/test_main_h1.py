@@ -67,16 +67,16 @@ class Commands(object):
             VShell_.current_path.pop(len(VShell_.current_path)-1)
         # идём на указанную директорию
         elif len(string.split(' ')) == 2:
-            #print("current path:", '/'.join(VShell_.current_path))
+            print("current path:", '/'.join(VShell_.current_path))
             for directories_ in VShell_.files:
                 directories_ = directories_[:-1]
                 if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
-                    #print("vshell updated")
-                    #print("directories_.split('/'):", directories_.split('/'))
+                    print("vshell updated")
+                    print("directories_.split('/'):", directories_.split('/'))
                     VShell_.current_path = directories_.split('/')
-                #print("direcrories_: "+directories_)
-                #print("cd command: "+ '/'.join(VShell_.current_path) + '/' + string.split(' ')[1])
-                return 0
+                    return 0
+                print("direcrories_: "+directories_)
+                print("cd command: "+ '/'.join(VShell_.current_path) + '/' + string.split(' ')[1])
             print("\033[32mcan't cd to " + str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
                   ": No such file or directory\033[0m")
         pass
@@ -87,9 +87,11 @@ class Commands(object):
             current_path_str_without_first_slash ='/'.join(VShell_.current_path)
             name_file = string.split(' ')[1]
             files_obj = VShell_.file_system.infolist()
-            for file_ in files_obj:
+            files_list = VShell_.file_system.namelist()
+            for file_ in files_list:
                 #print(f"file_: {file_}\nname str: {current_path_str_without_first_slash}/{name_file}")
-                if current_path_str_without_first_slash + '/' + name_file in str(file_):
+                if current_path_str_without_first_slash + '/' + name_file == str(file_):
+                    print(f"file_: {file_}\nname str: {current_path_str_without_first_slash}/{name_file}")
                     print('> ', end='')
                     for symbol_ in VShell_.file_system.read(file_).decode('utf-8'):
                         if symbol_ != '\n': print(symbol_, end='')
