@@ -1,9 +1,7 @@
 import requests
 import warnings
-import threading
-from time import sleep
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+
 
 # pip freeze > requirements.txt
 
@@ -41,4 +39,3 @@ def get_dependencies(package_name, level, per_a, per_b):
 get_dependencies("pandas", 0 - 1, 2, 8)
 i = input("Для продолжение нажмите любую клавишу...\n")
 driver.quit()
-# result = "digraph dependencies {\n" + get_dependencies("pandas") + "\n}"
