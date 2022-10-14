@@ -21,5 +21,6 @@ functions = {'func1':func1, 'func2':func2}
 
 functions['func1']("hi")'''
 
-s = "123"
-print(s[:-1])
+otus_massiv = [1, 2, 3, 4, 5]
+otus_massiv.pop(2)
+print(otus_massiv)

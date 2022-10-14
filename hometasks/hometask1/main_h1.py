@@ -1,129 +1,199 @@
-import sys
 import os
-import time
+import sys
 import socket
 import zipfile
-import random
 
 
-# import keyboard
-
-#
-# /mnt/c/Users/iyuna/source/repos
 # /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
-#
-
-# keyboard.add_hotkey('Tab', lambda: print('Hello', end=' '))
+# test_main_h1.py file_system.zip
 
 
-def change_dir(pre_dir, pos_dir):
-    pass
-
-
-# Первый иф ломается проверка zip файла время от времени
-if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
-#if len(sys.argv) == 2 and ".zip" in sys.argv[1]:
-    path_file_system = sys.argv[1]
-else:
-    # print(sys.argv)
-    print("Invalid file system!")
-    sys.exit(1)
-
-system = sys.platform
+login = "yunik"  # os.getlogin()
+hostname = socket.gethostname
 start_message = "Loading...\n\nWelcome to Hometask 01\n"
-pre_name = f"[yunik@{socket.gethostname()} ~]# "
-commands = ["pwd", "ls", "cd", "cat", "exit", "clear", "help"]
-# command = ""
 
-print(start_message)
-current_path = ['root']
 
-file_system = zipfile.ZipFile(path_file_system, 'a')
-files = file_system.namelist()  # Список всех директорий
-if system == "win32":
-    while 123:
-        command = str(input(pre_name))
-        if command == "test":
-            print("test started")
-            print("test finished")
+class Functional(object):
+    @staticmethod
+    def create_methods_list(class_name_):
+        list_methods_ = []
+        for attribute in dir(class_name_):
+            # Получить значение атрибута
+            attribute_value = getattr(class_name_, attribute)
+            # Проверьте, что он доступен для вызова
+            if callable(attribute_value):
+                # Фильтровать все методы по (__ префиксу)
+                if not attribute.startswith('__'):
+                    list_methods_.append([attribute])
+        for value_, string_ in enumerate(list_methods_):
+            list_methods_[value_].append(getattr(class_name_, string_[0]))
+        return list_methods_
 
-        elif command == "help":
-            print(commands)
 
-        elif command == "cls" or "clear":
-            os.system('cls')
+class Commands(object):
+    """
+    self.commands = [["pwd", self.pwd], ["ls", self.ls], ["cd", self.cd], ["cat", self.cat], ["s", self.s]]
+    # commands[0][1]("123")
+    # Можно также списком ->
+    # commands = {'pwd':pwd, 'ls':ls, 'cd':cd, 'cat':cat}
+    """
 
-        elif command == "exit":
-            sys.exit(1)
+    def __init__(self):
+        self.commands = Functional.create_methods_list(Commands)
+        # print("init of Commands:\n", self.commands)
+        pass
 
-        elif command == "restart":
-            os.system("cls")
-            os.system(rf"cd {os.getcwd()}")
-            os.system(rf"py main_h1.py {path_file_system}")
-            sys.exit(1)
-        elif command == "pwd":
-            for folder in current_path: print('/' + folder, end='')
+    @staticmethod
+    def pwd(string, VShell_):
+        if len(string.split(' ')) == 1: print('/' + '/'.join(VShell_.current_path))
+
+    @staticmethod
+    def ls(string, VShell_):
+        if len(string.split(' ')) == 1:
+            passed = []
+            current_folder_ = VShell_.current_path[len(VShell_.current_path)-1]
+            for file_ in VShell_.files:
+                directory_ = file_.split('/')
+                for value_, folder_ in enumerate(directory_):
+                    if folder_ == current_folder_ and directory_[value_+1] not in passed:
+                        passed.append(directory_[value_+1])
+                        print(directory_[value_+1], end=' ')
             print()
 
-        # Создание новой папки
-        elif command == "mkdir":
-            pass
+    @staticmethod
+    def cd(string, VShell_):
+        # отдаляемся на шаг назад
+        if len(string.split(' ')) == 1 and len(VShell_.current_path) != 1:
+            VShell_.current_path.pop(len(VShell_.current_path)-1)
+        # идём на указанную директорию
+        elif len(string.split(' ')) == 2:
+            #print("current path:", '/'.join(VShell_.current_path))
+            for directories_ in VShell_.files:
+                directories_ = directories_[:-1]
+                if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
+                    #print("vshell updated")
+                    #print("directories_.split('/'):", directories_.split('/'))
+                    VShell_.current_path = directories_.split('/')
+                #print("direcrories_: "+directories_)
+                #print("cd command: "+ '/'.join(VShell_.current_path) + '/' + string.split(' ')[1])
+                return 0
+            print("\033[32mcan't cd to " + str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
+                  ": No such file or directory\033[0m")
+        pass
 
-        elif command == "ls":
-            for _dir in files:
-                if _dir.count('/') == 1 or (_dir.count('/') == 2 and _dir.count('.') == 0):
-                    print(_dir.split('/')[1], end=' ')
-            print()
+    @staticmethod
+    def cat(string, VShell_):
+        if len(string.split(' ')) == 2:
+            current_path_str_without_first_slash ='/'.join(VShell_.current_path)
+            name_file = string.split(' ')[1]
+            files_obj = VShell_.file_system.infolist()
+            for file_ in files_obj:
+                #print(f"file_: {file_}\nname str: {current_path_str_without_first_slash}/{name_file}")
+                if current_path_str_without_first_slash + '/' + name_file in str(file_):
+                    print('> ', end='')
+                    for symbol_ in VShell_.file_system.read(file_).decode('utf-8'):
+                        if symbol_ != '\n': print(symbol_, end='')
+                        else: print('\n> ', end='')
+                    print()
+                    return 0
+            print("can't open " + name_file + ": No such file or directory")
 
-        elif "cd" in command:
-            command = command.split(' ')
-            print(command)
-            pass
+    @staticmethod
+    def s(string, VShell_):  # вызывать отсюда специальные функции
+        for SpecCommand_ in VShell_.special_commands:
+            if SpecCommand_[0] in string:
+                SpecCommand_[1](string, VShell_)
+        pass
 
+
+class SpecialCommands(object):
+    """
+    # __init__
+    self.special_commands = [["test0", self.test0], ["test1", self.test1], ["restart", self.restart],
+                             ["exit", self.exit]]
+    """
+
+    def __init__(self):
+        self.special_commands = Functional.create_methods_list(SpecialCommands)
+        # print("init of SpecialCommands:\n", self.special_commands)
+
+    # Функции для отладки, извне задания
+    @staticmethod
+    def test0(string, VShell_):
+        print(f"test0\nstring: {string}\nVShell_obj: {VShell_}")
+
+    @staticmethod
+    def test1(string, VShell_):
+        print(f"test1\nstring: {string}\nVShell_obj: {VShell_}")
+        # print(VShell_.special_commands)
+        # VShell_.special_commands__[2](string, VShell_)
+        # print(f"test1\nstring: {string}\nVShell_obj: {VShell_}")
+
+    @staticmethod
+    def exit(string, VShell_):
+        sys.exit(1)
+
+    @staticmethod
+    def restart(string, VShell_):  # нужно получать путь из дочернего объекта, а не из основной программы
+        if VShell_.system == "win32":
+            i_ = str(input("Убедитесь, что запускаете через cmd, powershell не поддерживает данную команду."
+                           "\nY-продолжить выполнение, n-пропустить выполнение\n> "))
+            if i_ == 'Y':
+                os.system("cls")
+            else:
+                return 0
         else:
-            print(f"sh: {command}: command not found", command)
-
-
-elif system == "linux":
-    while 123:
-        command = str(input(pre_name))
-        if command == "test":
-            print("test started")
-            print("test finished")
-
-        elif command == "help":
-            print(commands)
-
-        elif command == "cls" or "clear":
-            os.system('clear')
-
-        elif command == "exit":
-            sys.exit(1)
-
-        elif command == "restart":
             os.system("clear")
-            os.system(rf"cd {os.getcwd()}")
-            os.system(rf"python3 main_h1.py {path_file_system}")
+        os.system(rf"cd {os.getcwd()}")
+        if VShell_.system == "win32":
+            print(rf"python test_main_h1.py {VShell_.path_file_system}")
+        else:
+            os.system(rf"python3 test_main_h1.py {VShell_.path_file_system}")
+        sys.exit(1)
+
+
+class VShell(Commands, SpecialCommands):
+
+    def __init__(self):
+        Commands.__init__(self)
+        SpecialCommands.__init__(self)
+        self.other_pre_name = None
+        self.pre_name_root = None
+        self.system = sys.platform
+        self.path_file_system = None
+        self.file_system = None
+        self.files = None
+        self.current_path = ['root']
+
+    def start(self):
+        if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
+            self.path_file_system = sys.argv[1]
+            self.file_system = zipfile.ZipFile(self.path_file_system, 'a')
+            self.files = self.file_system.namelist()
+            print(start_message)
+        else:
+            print("Invalid file system!")
             sys.exit(1)
 
-        elif command == "pwd":
-            for folder in current_path: print('/' + folder, end='')
-            print()
+    def startExpectationCommand(self):
+        self.pre_name_root = str("\033[32m{}\033[0m{}\033[34m{}\033[0m{}"
+                                 .format(f"{login}@{hostname()}", ':', '~', '$ '))
+        self.other_pre_name = str("\033[32m{}\033[0m{}\033[34m{}\033[0m{}"
+                                  .format(f"{login}@{hostname()}", ':', f"/{'/'.join(self.current_path)}", '$ '))
+        if len(self.current_path) == 1: cmd_input = str(input(self.pre_name_root))
+        else: cmd_input = str(input(self.other_pre_name))
+        return cmd_input, len(cmd_input.split(' '))
 
-        # Создание новой папки
-        elif command == "mkdir":
-            pass
 
-        elif command == "ls":
-            for _dir in files:
-                if _dir.count('/') == 1 or (_dir.count('/') == 2 and _dir.count('.') == 0):
-                    print(_dir.split('/')[1], end=' ')
-            print()
-
-        elif "cd" in command:
-            command = command.split(' ')
-            print(command)
-            pass
-
-        else:
-            print(f"sh: {command}: command not found", command)
+shell = VShell()
+shell.start()
+while 123:
+    commandIN, command_len = shell.startExpectationCommand()
+    #print(f"commandIN: {commandIN}\ncommand_len: {command_len}")
+    if commandIN:
+        i = False
+        for command in shell.commands:
+            if command[0] == commandIN.split(' ')[0]:
+                i = True
+                command[1](commandIN, shell)
+        if not i: print(f"sh: {commandIN}: command not found", commandIN.split(' ')[0])

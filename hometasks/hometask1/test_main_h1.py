@@ -3,6 +3,7 @@ import sys
 import socket
 import zipfile
 
+
 # /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
 # test_main_h1.py file_system.zip
 
@@ -62,11 +63,22 @@ class Commands(object):
     @staticmethod
     def cd(string, VShell_):
         # отдаляемся на шаг назад
-        if len(string.split(' ')) == 1:
-            pass
+        if len(string.split(' ')) == 1 and len(VShell_.current_path) != 1:
+            VShell_.current_path.pop(len(VShell_.current_path)-1)
         # идём на указанную директорию
         elif len(string.split(' ')) == 2:
-            pass
+            #print("current path:", '/'.join(VShell_.current_path))
+            for directories_ in VShell_.files:
+                directories_ = directories_[:-1]
+                if str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) == str(directories_):
+                    #print("vshell updated")
+                    #print("directories_.split('/'):", directories_.split('/'))
+                    VShell_.current_path = directories_.split('/')
+                #print("direcrories_: "+directories_)
+                #print("cd command: "+ '/'.join(VShell_.current_path) + '/' + string.split(' ')[1])
+                return 0
+            print("\033[32mcan't cd to " + str('/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
+                  ": No such file or directory\033[0m")
         pass
 
     @staticmethod
@@ -82,7 +94,9 @@ class Commands(object):
                     for symbol_ in VShell_.file_system.read(file_).decode('utf-8'):
                         if symbol_ != '\n': print(symbol_, end='')
                         else: print('\n> ', end='')
-        print()
+                    print()
+                    return 0
+            print("can't open " + name_file + ": No such file or directory")
 
     @staticmethod
     def s(string, VShell_):  # вызывать отсюда специальные функции
@@ -143,13 +157,13 @@ class VShell(Commands, SpecialCommands):
     def __init__(self):
         Commands.__init__(self)
         SpecialCommands.__init__(self)
+        self.other_pre_name = None
+        self.pre_name_root = None
         self.system = sys.platform
         self.path_file_system = None
         self.file_system = None
         self.files = None
         self.current_path = ['root']
-        self.pre_name_root = f"[{login}@{hostname()} ~]#"
-        self.other_pre_name = f"[{login}@{hostname()} ~]: /{'/'.join(self.current_path)}"
 
     def start(self):
         if len(sys.argv) == 2 and zipfile.is_zipfile(sys.argv[1]):
@@ -162,6 +176,10 @@ class VShell(Commands, SpecialCommands):
             sys.exit(1)
 
     def startExpectationCommand(self):
+        self.pre_name_root = str("\033[32m{}\033[0m{}\033[34m{}\033[0m{}"
+                                 .format(f"{login}@{hostname()}", ':', '~', '$ '))
+        self.other_pre_name = str("\033[32m{}\033[0m{}\033[34m{}\033[0m{}"
+                                  .format(f"{login}@{hostname()}", ':', f"/{'/'.join(self.current_path)}", '$ '))
         if len(self.current_path) == 1: cmd_input = str(input(self.pre_name_root))
         else: cmd_input = str(input(self.other_pre_name))
         return cmd_input, len(cmd_input.split(' '))
@@ -169,7 +187,6 @@ class VShell(Commands, SpecialCommands):
 
 shell = VShell()
 shell.start()
-
 while 123:
     commandIN, command_len = shell.startExpectationCommand()
     #print(f"commandIN: {commandIN}\ncommand_len: {command_len}")
