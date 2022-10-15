@@ -3,7 +3,6 @@ import sys
 import socket
 import zipfile
 
-
 # /mnt/c/Users/iyuna/source/repos/python/yunikeil/configYPR/hometasks/hometask1
 # test_main_h1.py file_system.zip
 
@@ -43,15 +42,15 @@ class Commands(object):
         if len(string.split(' ')) == 1:
             z_ = False
             passed = []
-            current_folder_ = VShell_.current_path[len(VShell_.current_path)-1]
+            current_folder_ = VShell_.current_path[len(VShell_.current_path) - 1]
             for file_ in VShell_.files:
                 directory_ = file_.split('/')
                 for value_, folder_ in enumerate(directory_):
-                    if folder_ == current_folder_ and directory_[value_+1] not in passed:
-                        if directory_[value_+1]: z_ = True
+                    if folder_ == current_folder_ and directory_[value_ + 1] not in passed:
+                        if directory_[value_ + 1]: z_ = True
                         if z_:
-                            passed.append(directory_[value_+1])
-                            print(directory_[value_+1], end=' ')
+                            passed.append(directory_[value_ + 1])
+                            print(directory_[value_ + 1], end=' ')
             if z_: print()
 
     @staticmethod
@@ -79,19 +78,22 @@ class Commands(object):
                 print("can't cd to " + str('/' + '/'.join(VShell_.current_path) + '/' + string.split(' ')[1]) +
                       ": No such file or directory")
 
-    #Изменить условие кета, в тестовой версии поменял.
+    # Изменить условие кета, в тестовой версии поменял.
     @staticmethod
     def cat(string, VShell_):
         if len(string.split(' ')) == 2:
-            current_path_str_without_first_slash ='/'.join(VShell_.current_path)
+            current_path_str_without_first_slash = '/'.join(VShell_.current_path)
             name_file = string.split(' ')[1]
             files_obj = VShell_.file_system.infolist()
-            for file_ in files_obj:
-                if current_path_str_without_first_slash + '/' + name_file in str(file_):
+            files_list = VShell_.file_system.namelist()
+            for file_ in files_list:
+                if current_path_str_without_first_slash + '/' + name_file == str(file_):
                     print('> ', end='')
                     for symbol_ in VShell_.file_system.read(file_).decode('utf-8'):
-                        if symbol_ != '\n': print(symbol_, end='')
-                        else: print('\n> ', end='')
+                        if symbol_ != '\n':
+                            print(symbol_, end='')
+                        else:
+                            print('\n> ', end='')
                     print()
                     return 0
             print("can't open " + name_file + ": No such file or directory")
@@ -169,14 +171,15 @@ class VShell(Commands, SpecialCommands):
                                  .format(f"{login}@{hostname()}", ':', '~', '$ '))
         self.other_pre_name = str("\033[32m{}\033[0m{}\033[34m{}\033[0m{}"
                                   .format(f"{login}@{hostname()}", ':', f"/{'/'.join(self.current_path)}", '$ '))
-        if len(self.current_path) == 1: cmd_input = str(input(self.pre_name_root))
-        else: cmd_input = str(input(self.other_pre_name))
+        if len(self.current_path) == 1:
+            cmd_input = str(input(self.pre_name_root))
+        else:
+            cmd_input = str(input(self.other_pre_name))
         return cmd_input, len(cmd_input.split(' '))
 
 
 shell = VShell()
 shell.start()
-
 
 while 123:
     commandIN, command_len = shell.startExpectationCommand()
