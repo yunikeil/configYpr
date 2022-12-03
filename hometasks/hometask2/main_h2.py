@@ -39,3 +39,5 @@ def get_dependencies(package_name, level, per_a, per_b):
 get_dependencies("pandas", 0 - 1, 2, 8)
 i = input("Для продолжение нажмите любую клавишу...\n")
 driver.quit()
+
+

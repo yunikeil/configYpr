@@ -113,7 +113,7 @@ class SpecialCommands(object):
     # Функции для отладки, извне задания
     @staticmethod
     def test0(string, VShell_):
-        print(f"test0\nstring: {string}\nVShell_obj: {VShell_}")
+        print(VShell_.files)
 
     @staticmethod
     def test1(string, VShell_):
