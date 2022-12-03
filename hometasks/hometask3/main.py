@@ -2,7 +2,9 @@ from typing import Final
 import re
 
 import json
-#from sly import Lexer
+from sly import Lexer
+
+import testy
 
 #
 
@@ -26,7 +28,8 @@ PROGRAM = \
     {
         'program' : "",
         'string' : {},
-        'int' : {}
+        'int' : {},
+        'math' : {}
     }
 
 
@@ -67,6 +70,8 @@ for index, line in enumerate(lines_expression):
         try:
             res = int(eval(slice_args[3]))
             PROGRAM[var_type][var_name] = res
+            res_ = testy.calc(slice_args[3])
+            PROGRAM['math'][var_name] = res_
         except ZeroDivisionError:
             exit(f'error in: "{full_line}"\ndivision by zero in line: {index + 1}')
         continue

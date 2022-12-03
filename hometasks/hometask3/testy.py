@@ -23,12 +23,12 @@ class CalcLexer(Lexer):
     RPAREN = r'\)'
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def calc(data: str):
     program = []
-    data = str(sys.argv[1])
+    #data = str(sys.argv[1])
     lexer = CalcLexer()
     for tok in lexer.tokenize(data):
         program.append({tok.type : tok.value})
-    print(json.dumps(program, sort_keys=False, indent=4))
-
+    return program
 
