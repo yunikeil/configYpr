@@ -1,4 +1,6 @@
 from sly import Lexer
+import sys
+import json
 
 
 class CalcLexer(Lexer):
@@ -22,7 +24,11 @@ class CalcLexer(Lexer):
 
 
 if __name__ == '__main__':
-    data = 'x = 3 + 42 * (s - t)'
+    program = []
+    data = str(sys.argv[1])
     lexer = CalcLexer()
     for tok in lexer.tokenize(data):
-        print('type=%r, value=%r' % (tok.type, tok.value))
+        program.append({tok.type : tok.value})
+    print(json.dumps(program, sort_keys=False, indent=4))
+
+

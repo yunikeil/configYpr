@@ -2,7 +2,7 @@ from typing import Final
 import re
 
 import json
-from sly import Lexer
+#from sly import Lexer
 
 #
 
