@@ -36,16 +36,17 @@ PROGRAM = \
 for index, line in enumerate(lines_expression):
     full_line = lines_expression[index].replace('\n', '')
     line = line.split(COMMENT)[0].replace('\n', '').replace(' ', '').replace('\t', '')
-    if not line: continue
     slice_args_re = re.findall(r'^(<([^<>]+)>(::=)<([^<>]+)>)$', line)
     slice_args = [varn for cort in slice_args_re for varn in cort]
 
-    if index == 0 and len(slice_args) == 4 and slice_args[1] == TYPES['PROGRAM_NAME']:
+    if index == 0 and slice_args and slice_args[1] == TYPES['PROGRAM_NAME']:
         print(f"Program: {slice_args[3]}")
         PROGRAM['program'] = slice_args[3]
         continue
     elif index == 0:
         exit(f'error in: "{full_line}"\nuncorrent program name in line: {index + 1}')
+
+    if not line: continue
 
     if slice_args and slice_args[1] in TYPES['TYPES_DATA']:
         PROGRAM[slice_args[1]][slice_args[3]] = NONE_OBJ

@@ -1,11 +1,15 @@
 <program> ::= <testProg> // prog name
+
 <string> ::= <strVar1>   // new string var
+
 <int> ::= <intVar1>      // ...
 <int> ::= <intVar2>      // ...
 <int> ::= <chislo>
 
 <string::strVar1> ::= <Hello, World> // write to string var
+
 <int::intVar1> ::= <2>               // ...
 <int::intVar2> ::= <8>               // ...
+
 <math::intVar2> ::= <2+16*82/8>
 <math::intVar1> ::= <2+18*(14+53)/16>
